@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 #------------------------------------------------------------------------------
 #generates a bedgraph with windows having values > Q3 + 1.5 * IQR
@@ -26,6 +26,7 @@ def main(argv):
          inputfile = arg
       elif opt in ("-o", "--ofile"):
          outputfile = arg
+   print(inputfile)
    #load input bedgraph file
    BEDGRPH = np.loadtxt(inputfile,dtype=np.str,delimiter='\t')
    #gets third column of counts
@@ -34,10 +35,8 @@ def main(argv):
    data = counts.astype(float)
    #calculates inter-quartile range
    IQR = scs.iqr(data)
-   #calculates median
-   MED = np.median(data)
    #calculates third quartile
-   Q3 = MED + (0.5 * IQR)
+   Q3 = np.percentile(data, 75)
    #calculates upper threshold for subsetting
    UpperOut = Q3 + (1.5*IQR)
    #subsets bedgraph
